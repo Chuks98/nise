@@ -116,11 +116,30 @@ class BlogController extends Controller
     {
         try {
             $blog = Blog::find($id);
+
             if (!$blog) {
                 return response()->json(['message' => 'Blog not found.'], 404);
             }
 
-            return response()->json($blog);
+            // COMMENTS PAGINATION
+            $page = request()->get('page', 1);
+            $perPage = 5;
+
+            $comments = collect($blog->comments);
+            $total = $comments->count();
+
+            $paginated = $comments->slice(($page - 1) * $perPage, $perPage)->values();
+
+            return response()->json([
+                'blog' => $blog,
+                'comments' => $paginated,
+                'pagination' => [
+                    'current_page' => (int)$page,
+                    'per_page' => $perPage,
+                    'total' => $total,
+                    'last_page' => ceil($total / $perPage),
+                ]
+            ]);
 
         } catch (\Exception $e) {
             Log::error('❌ getSingleBlog error: ' . $e->getMessage());
@@ -130,6 +149,7 @@ class BlogController extends Controller
             ], 500);
         }
     }
+
 
 
     /**

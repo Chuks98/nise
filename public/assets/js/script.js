@@ -150,7 +150,7 @@ $(() => {
 
                 blogs.forEach(blog => {
                     $("#blogContainer").append(`
-                        <div class="col-md-6 col-sm-12" style="max-height: 250px">
+                        <div class="col-md-6 col-sm-12" style="max-height: auto;">
                             <div class="blog-singe no-margin row">
 
                                 <div class="col-sm-5 blog-img-tab">
@@ -208,6 +208,20 @@ $(() => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
   // Fetch and view single blog's details
   if(window.location.pathname.startsWith('/blog-detail')) {
     const blogId = window.location.pathname.split('/').pop();
@@ -222,36 +236,57 @@ $(() => {
     }
 
     // 🔁 Fetch and Render Blog
-    function loadBlogDetails(blogId) {
+    function loadBlogDetails(blogId, page = 1) {
       $.ajax({
-        url: '/blog/getSingleBlog/' + blogId,
+        url: `/blog/getSingleBlog/${blogId}?page=${page}`,
         method: 'GET',
-        success: function (blog) {
+        success: function (response) {
+
+          const blog = response.blog;
+          const comments = response.comments;
+          const pagination = response.pagination;
 
           let commentsHtml = '';
-          if (blog.comments?.length) {
-            commentsHtml = `<h4 class="comments-count">${blog.comments.length} Comment${blog.comments.length > 1 ? 's' : ''}</h4>`;
-            blog.comments.forEach((c, i) => {
-              const date = new Date(c.createdAt).toLocaleDateString('en-US', {
-                year: 'numeric', month: 'long', day: 'numeric'
-              });
+
+          commentsHtml += `<h4 class="comments-count">${pagination.total} Comment${pagination.total > 1 ? 's' : ''}</h4>`;
+
+          if (comments.length) {
+            comments.forEach((c, i) => {
               commentsHtml += `
-                <div id="comment-${i}" class="comment mb-4 p-3 border rounded shadow-sm bg-white">
+                <div class="comment mb-4 p-3 border rounded shadow-sm bg-white">
                   <div class="d-flex align-items-start gap-3">
-                    <div class="comment-img">
-                      <img src="/images/blog/user-1.jpg" alt="User" class="rounded-circle" width="50" height="50">
-                    </div>
+                    <img src="/images/blog/user-1.jpg" class="rounded-circle" width="50" height="50">
+
                     <div class="flex-grow-1">
-                      <div class="d-flex justify-content-between align-items-center mb-1">
-                        <h6 class="mb-0 fw-semibold text-dark">${c.name}</h6>
-                        <small class="text-muted"><i class="bi bi-clock me-1"></i>${date}</small>
-                      </div>
-                      <p class="text-muted mb-2" style="font-size: 0.95rem;">${c.comment}</p>
+                      <h6 class="fw-semibold mb-1">${c.name}</h6>
+                      <small class="text-muted">${formatBlogDate(c.created_at)}</small>
+                      <p class="mt-2">${c.comment}</p>
                     </div>
                   </div>
                 </div>
               `;
             });
+
+            // PAGINATION BUTTONS
+            commentsHtml += `<div class="d-flex justify-content-between mt-3">`;
+
+            if (pagination.current_page > 1) {
+              commentsHtml += `
+                <button class="btn btn-outline-secondary" onclick="loadBlogDetails(${blogId}, ${pagination.current_page - 1})">Previous</button>
+              `;
+            } else {
+              commentsHtml += `<div></div>`;
+            }
+
+            if (pagination.current_page < pagination.last_page) {
+              commentsHtml += `
+                <button class="btn btn-outline-primary" onclick="loadBlogDetails(${blogId}, ${pagination.current_page + 1})">Next</button>
+              `;
+            }
+
+            commentsHtml += `</div>`;
+          } else {
+            commentsHtml = `<p class="text-muted">No comments yet.</p>`;
           }
 
           const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -325,8 +360,10 @@ $(() => {
       });
     }
 
+    window.loadBlogDetails = loadBlogDetails;
+
     // Load blog when page loads
-    loadBlogDetails(blogId);
+    loadBlogDetails(blogId, 1);
 
 
 
@@ -377,7 +414,7 @@ $(() => {
             title: 'Comment Posted',
             text: 'Your comment has been successfully added.',
           }).then(() => {
-            loadBlogDetails(blogId); // 👈 Refresh content dynamically
+            loadBlogDetails(blogId, 1); // 👈 Refresh content dynamically
           });
         },
         error: function (err) {
