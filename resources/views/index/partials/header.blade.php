@@ -37,27 +37,19 @@
     <div id="menu-jk" class="header-bottom">
         <div class="container">
             <div class="row nav-row">
-                <div class="col-lg-3 col-md-12 logo">
+                <div class="col-lg-2 col-md-12 logo">
                     <a href="/">
                         <img src="{{ asset('assets/images/logo.jpg') }}" alt="Logo" class="site-logo">
                     </a>
 
                 </div>
-                <div class="col-lg-9 col-md-12 nav-col">
+                <div class="col-lg-10 col-md-12 nav-col">
                     <nav class="navbar navbar-expand-lg navbar-light">
-
-                        <button
-                                class="navbar-toggler"
-                                type="button"
-                                data-toggle="collapse"
-                                data-target="#navbarNav"
-                                aria-controls="navbarNav"
-                                aria-expanded="false"
-                                aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav">
+                            <ul class="navbar-nav" style="font-size: 15px;">
                                 <li class="nav-item active">
                                     <a class="nav-link" href="/">Home
                                     </a>

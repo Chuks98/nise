@@ -14,6 +14,20 @@
     <link rel="stylesheet" href="{{ asset('assets/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+
+     <!-- For CSRF protection in AJAX requests -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
+  <!-- SEO Optimization Tags -->
+  <meta name="description" content="Cornelia Connelly College Nise, Anambra State — nurturing faith, knowledge, and character through quality Catholic education and holistic development.">
+  <meta name="keywords" content="Cornelia Connelly College Nise, Catholic school, girls secondary school, Anambra State, education, Holy Child Jesus, Nise school, faith-based education">
+  <link rel="canonical" href="{{ url()->current() }}">
+  <meta name="author" content="Cornelia Connelly College Nise, Anambra State">
+  <meta property="og:title" content="Cornelia Connelly College Nise, Anambra State">
+  <meta property="og:description" content="Dedicated to the holistic development of students through academic excellence, spiritual growth, and moral integrity.">
+  <meta property="og:image" content="{{ asset('assets/images/slider/Compound_2.jpg') }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url()->current() }}">
 </head>
 
 <body>
@@ -34,6 +48,9 @@
     <script src="{{ asset('assets/plugins/scroll-fixed/jquery-scrolltofixed-min.js') }}"></script>
     <script src="{{ asset('assets/plugins/slider/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
+    <script src="{{ asset('dashboard-assets/libs/apexcharts/dist/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('dashboard-assets/libs/simplebar/dist/simplebar.js') }}"></script>
+    <script src="{{ asset('dashboard-assets/libs/sweetalert2/sweetalert2.all.min.js') }}"></script>
 
 </body>
 </html>

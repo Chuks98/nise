@@ -2,8 +2,10 @@
     <!-- Result Check Form -->
     <div class="col-md-6">
         <div class="card shadow">
+            <div class="card-header bg-primary text-center py-3">
+                <h4 class="mb-0 text-white">Check Result</h4>
+            </div>
             <div class="card-body">
-                <h4 class="card-title">Check Result</h4>
 
                 <form id="resultCheckForm">
                     @csrf
@@ -78,8 +80,10 @@
     <!-- Result Display -->
     <div class="col-md-6">
         <div class="card shadow">
+            <div class="card-header bg-primary text-center py-3">
+                <h4 class="mb-0 text-white">Student Result</h4>
+            </div>
             <div class="card-body">
-                <h4 class="card-title">Student Result</h4>
 
                 <div id="resultDisplay" class="scrollable" style="height: 465px; overflow-y: auto;">
                     <p class="text-muted">Fill the form and submit to view result...</p>

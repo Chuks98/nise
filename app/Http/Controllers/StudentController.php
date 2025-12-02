@@ -270,24 +270,25 @@ class StudentController extends Controller
                 return response()->json(['message' => 'No result found.'], 404);
             }
 
-            // 4️⃣ Build HTML for subjects
-            $subjects = '';
-            foreach ($scores as $s) {
-                $subjects .= "<p><strong>{$s->subject}:</strong> {$s->total}</p>";
-            }
-
             Log::info("Result fetched successfully", [
                 'reg_no'   => $student->reg_no,
                 'class'    => $request->class,
-                'semester' => $request->semester
+                'semester' => $request->semester,
+                'scores'   => $scores
             ]);
+
+            $score = $scores->first(); // extract the single result row
 
             return response()->json([
                 'name'        => $student->name,
                 'reg_no'      => $student->reg_no,
-                'class'       => $request->class,     // use selected class
-                'semester'    => $request->semester,  // use selected semester
-                'scores_html' => $subjects
+                'class'       => $request->class,
+                'semester'    => $request->semester,
+                'total_point' => $score->total,
+                'position'    => $score->position,
+                'session'     => $score->session,
+                'remarks'     => $score->remarks,
+                'average'     => $score->average,
             ]);
 
         } catch (\Exception $e) {

@@ -55,7 +55,7 @@ class BlogController extends Controller
     public function getAllBlogs(Request $request)
     {
         $page = $request->query('page', 1);
-        $limit = $request->query('limit', 5);
+        $limit = $request->query('limit', 10);
 
         try {
             $blogs = Blog::orderBy('created_at', 'desc')->paginate($limit, ['*'], 'page', $page);
@@ -77,13 +77,19 @@ class BlogController extends Controller
         }
     }
 
+
+
+
+
+
     /**
      * Get latest 10 blogs
      */
     public function latestNews()
     {
         try {
-            $latestBlogs = Blog::orderBy('created_at', 'desc')->limit(10)->get();
+            $latestBlogs = Blog::orderBy('created_at', 'desc')->limit(5)->get();
+            Log::info('✅ latestNews fetched successfully:', $latestBlogs->toArray());
 
             return response()->json([
                 'message' => 'Latest blogs retrieved successfully.',
@@ -98,6 +104,10 @@ class BlogController extends Controller
             ], 500);
         }
     }
+
+
+
+
 
     /**
      * Get a single blog by ID
@@ -273,11 +283,15 @@ class BlogController extends Controller
     }
 
 
+
+
+
     /**
      * Add a comment to a blog post
      */
     public function addComment(Request $request, $id)
     {
+        // Validate input
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email',
@@ -286,24 +300,40 @@ class BlogController extends Controller
 
         try {
             $blog = Blog::find($id);
-            if (!$blog) return response()->json(['message' => 'Blog not found.'], 404);
 
-            $blog->comments = array_merge($blog->comments ?? [], [
-                ['name' => $request->name, 'email' => $request->email, 'comment' => $request->comment, 'created_at' => now()]
-            ]);
+            if (!$blog) {
+                Log::warning("⚠️ addComment: Blog with ID {$id} not found.");
+                return response()->json(['message' => 'Blog not found.'], 404);
+            }
 
+            // Append new comment
+            $newComment = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'comment' => $request->comment,
+                'created_at' => now()
+            ];
+
+            $blog->comments = array_merge($blog->comments ?? [], [$newComment]);
             $blog->save();
+
+            Log::info("✅ addComment: Comment added to blog ID {$id}", ['comment' => $newComment]);
+
             return response()->json([
                 'message' => 'Comment added successfully.',
                 'data' => $blog
             ]);
 
         } catch (\Exception $e) {
-            Log::error('❌ addComment error: ' . $e->getMessage());
+            Log::error("❌ addComment error for blog ID {$id}: " . $e->getMessage(), [
+                'stack' => $e->getTraceAsString()
+            ]);
+
             return response()->json([
                 'message' => 'Failed to add comment.',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
+
 }

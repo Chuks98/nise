@@ -56,6 +56,7 @@ Route::prefix('student')->group(function () {
 Route::get('/', [IndexController::class, 'home'])->name('home');
 Route::get('/admin-login', [IndexController::class, 'adminLoginPage'])->name('admin-login');
 Route::post('/logout', [IndexController::class, 'logout'])->name('logout');
+Route::get('/blog-detail/{id}', [IndexController::class, 'showSingleBlog'])->name('blog.detail');
 Route::get('/{page}', [IndexController::class, 'dynamic'])->name('dynamic.page');
 
 
@@ -69,7 +70,7 @@ Route::prefix('blog')->group(function () {
     // List all blogs
     Route::get('/getAllBlogs', [BlogController::class, 'getAllBlogs']);
 
-    // Latest news - 10 latest blogs
+    // Latest news - 4 latest blogs
     Route::get('/latestNews', [BlogController::class, 'latestNews']);
 
     // Get single blog by ID

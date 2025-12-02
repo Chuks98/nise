@@ -87,6 +87,22 @@ class IndexController extends Controller
     }
 
 
+
+    // Show blog page
+    public function showSingleBlog()
+    {
+        $user = session('user');
+        $role = $user['role'] ?? null;
+
+        return view('index.main_layout', [
+            'page' => "index.pages.blog-detail",
+            'user' => $user,
+            'role' => $role
+        ]);
+    }
+
+
+
     // ✅ Dynamic catch-all pages (like /about, /services)
     public function dynamic($page)
     {
